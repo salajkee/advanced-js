@@ -1,17 +1,28 @@
 "use strict";
 
-const persone = {
-    name: "Alex",
-    tel: "+998913333333",
-    parents: {
-        mom: 'Olga',
-        dad: 'Mike'
-    }
-};
+const inputRUb = document.querySelector('#rub'),
+      inputUsd =document.querySelector('#usd');
 
-const clone = JSON.parse(JSON.stringify(persone));
-clone.parents.dad = 'John';
-clone.parents.mom = 'Ann';
+inputRUb.addEventListener('input', () => {
+    const request = new XMLHttpRequest();
 
-console.log(persone);
-console.log(clone);
+    request.open('GET', 'js/current.json');
+    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    request.send();
+
+    request.addEventListener('load', () => {
+        if (request.status === 200) {
+            const data = JSON.parse(request.response);
+            inputUsd.value = (+inputRUb.value / data.current.usd).toFixed(2);
+        } else {
+            inputUsd.value = 'Что-то пошло не так';
+        }
+    });
+
+    // status
+    // statusText
+    // response
+    // readyState
+
+
+});
